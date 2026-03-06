@@ -1,0 +1,44 @@
+# models/staging/sources.yml
+version: 2
+
+sources:
+  - name: raw
+    description: "Datos crudos replicados desde la base de producción"
+    tables:
+      - name: clientes
+        description: "Registro de usuarios del sistema operacional"
+        columns:
+          - name: id
+            description: "Identificador único del cliente"
+          - name: email
+            description: "Email del cliente"
+          - name: nombre
+            description: "Nombre completo del cliente"
+          - name: fecha_registro
+            description: "Fecha de creación del registro"
+          - name: activo
+            description: "Indica si el cliente está activo en el sistema"
+        freshness:
+          warn_after: {count: 2, period: day}
+          error_after: {count: 3, period: day}
+        loaded_at_field: fecha_registro
+        
+      - name: pedidos
+        description: "Pedidos del sistema operacional"
+        columns:
+          - name: id
+            description: "Identificador único del pedido"
+          - name: cliente_id
+            description: "Referencia al cliente"
+          - name: estado
+            description: "Estado del pedido (draft, pendiente, entregado, cancelado)"
+          - name: monto
+            description: "Monto total del pedido"
+          - name: fecha_creacion
+            description: "Fecha de creación del pedido"
+          - name: fecha_actualizacion
+            description: "Fecha de última actualización"
+        freshness:
+          warn_after: {count: 1, period: hour}
+          error_after: {count: 2, period: hour}
+        loaded_at_field: fecha_creacion

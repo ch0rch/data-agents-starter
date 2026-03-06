@@ -1,0 +1,17 @@
+# dbt
+dbt-project/target/
+dbt-project/dbt_packages/
+dbt-project/logs/
+dbt-project/.user.yml
+
+# Profiles con credenciales
+profiles.yml
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store

@@ -1,0 +1,94 @@
+# models/marts/schema.yml
+version: 2
+
+models:
+  - name: dim_clientes_activos
+    description: |
+      Dimensión de clientes considerados activos para el negocio.
+      Incluye métricas de comportamiento y criterios explícitos de activación.
+    columns:
+      - name: cliente_id
+        description: "Identificador único del cliente. Clave primaria."
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_clientes')
+              field: cliente_id
+      
+      - name: email
+        description: "Email normalizado del cliente (minúsculas, sin espacios)."
+        tests:
+          - not_null
+      
+      - name: nombre
+        description: "Nombre completo del cliente."
+      
+      - name: fecha_registro
+        description: "Fecha de creación del registro en el sistema."
+      
+      - name: es_activo_sistema
+        description: "Indica si el cliente está activo en el sistema operacional."
+        tests:
+          - not_null
+      
+      - name: es_cliente_activo
+        description: "Flag calculado: true si cumple todos los criterios de cliente activo."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true]
+              # Este modelo solo contiene clientes activos
+      
+      - name: estado_cliente
+        description: "Clasificación detallada del estado (activo_reciente, activo_regular, etc.)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['activo_reciente', 'activo_regular', 'activo_ocasional']
+      
+      - name: total_pedidos
+        description: "Cantidad total de pedidos realizados (incluye cancelados)."
+        tests:
+          - not_null
+      
+      - name: pedidos_entregados
+        description: "Cantidad de pedidos entregados exitosamente."
+        tests:
+          - not_null
+      
+      - name: pedidos_cancelados
+        description: "Cantidad de pedidos cancelados."
+        tests:
+          - not_null
+      
+      - name: tasa_cancelacion
+        description: "Porcentaje de pedidos cancelados sobre el total (0-1)."
+        tests:
+          - not_null
+      
+      - name: monto_total_comprado
+        description: "Suma de montos de todos los pedidos entregados."
+        tests:
+          - not_null
+      
+      - name: ticket_promedio
+        description: "Monto promedio por pedido entregado."
+      
+      - name: fecha_primer_pedido
+        description: "Fecha del primer pedido realizado."
+      
+      - name: fecha_ultimo_pedido
+        description: "Fecha del último pedido realizado."
+      
+      - name: dias_desde_ultimo_pedido
+        description: "Días transcurridos desde la última compra."
+      
+      - name: dias_desde_registro
+        description: "Antigüedad del cliente en días."
+      
+      - name: frecuencia_mensual
+        description: "Promedio de pedidos por mes desde el primer pedido."
+      
+      - name: segmento_recencia
+        description: "Segmentación basada en recencia de compra."
